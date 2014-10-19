@@ -46,7 +46,8 @@ sshd_config = '/etc/ssh/sshd_config'
 seds = [
   's/^#PasswordAuthentication yes/PasswordAuthentication no/g',
   's/^X11Forwarding yes/X11Forwarding no/g',
-  's/^UsePAM yes/UsePAM no/g'
+  's/^UsePAM yes/UsePAM no/g',
+  's/^#PermitRootLogin no/#PermitRootLogin yes/g'
 ]
 
 bash 'ssh hardening' do
@@ -56,10 +57,10 @@ bash 'ssh hardening' do
   EOC
 end
 
-service 'ssh' do                                             
- start_command "service ssh start"                          
- restart_command "service ssh restart"                      
- action :restart                                            
+service 'ssh' do
+ start_command "service ssh start"
+ restart_command "service ssh restart"
+ action :restart
 end
 
 # now allow SSH traffic through the firewall and restart SSH
@@ -68,7 +69,7 @@ bash "opening ufw for ssh traffic" do
   user "root"
   code <<-EOC
   ufw default deny
-  ufw allow 22
+  ufw allow #{node['ssh']['port']}
   ufw --force enable
   EOC
 end
