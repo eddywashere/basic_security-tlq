@@ -47,7 +47,8 @@ seds = [
   's/^#PasswordAuthentication yes/PasswordAuthentication no/g',
   's/^X11Forwarding yes/X11Forwarding no/g',
   's/^UsePAM yes/UsePAM no/g',
-  's/^#PermitRootLogin no/#PermitRootLogin yes/g'
+  's/^Port 22/Port #{node[\'ssh\'][\'port\']}/g',
+  's/^PermitRootLogin yes/PermitRootLogin no/g'
 ]
 
 bash 'ssh hardening' do
